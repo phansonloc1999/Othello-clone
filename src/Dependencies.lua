@@ -7,3 +7,8 @@ require("src/Colors")
 require("src/UILayout")
 require("src/RectButton")
 require("src/Text")
+
+require("src/StateMachine")
+require("src/States/BaseState")
+require("src/States/MenuState")
+require("src/States/BoardState")
