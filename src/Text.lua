@@ -9,7 +9,9 @@ function Text:init(x, y, textString, font, color)
 end
 
 function Text:render()
+    love.graphics.setColor(self._color)
     love.graphics.draw(self._text, self._x, self._y)
+    love.graphics.setColor(gColors.WHITE)
 end
 
 function Text:setPos(newX, newY)

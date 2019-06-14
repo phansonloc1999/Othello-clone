@@ -9,7 +9,8 @@ function RectButton:init(boxX, boxY, boxWidth, boxHeight, textString, textColor,
 end
 
 function RectButton:render()
-    love.graphics.rectangle("line", self._boxX, self._boxY, self._boxWidth, self._boxHeight)
+    love.graphics.setColor(gColors.WHITE)
+    love.graphics.rectangle("fill", self._boxX, self._boxY, self._boxWidth, self._boxHeight)
 
     love.graphics.setColor(self._textColor)
     love.graphics.draw(
@@ -17,7 +18,7 @@ function RectButton:render()
         self._boxX + self._boxWidth / 2 - self._text:getWidth() / 2,
         self._boxY + self._boxHeight / 2 - self._text:getHeight() / 2
     )
-    love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(gColors.WHITE)
 end
 
 function RectButton:collidesWithMouse()
