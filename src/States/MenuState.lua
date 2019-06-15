@@ -7,12 +7,12 @@ DEFAULT_FONT = love.graphics.setNewFont(12)
 function MenuState:init()
     self._playButton =
         RectButton(
-        getCenterX(love.graphics.getWidth(), 100),
-        getCenterY(love.graphics.getHeight(), 30) + 50,
-        100,
+        getCenterX(0, love.graphics.getWidth(), 120),
+        getCenterY(0, love.graphics.getHeight(), 30) + 50,
+        120,
         30,
+        "assets/Start.png",
         nil,
-        "Play",
         gColors.BLACK
     )
 

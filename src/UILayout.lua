@@ -4,11 +4,11 @@ function getPositionsWithOffsets(x, y, offsetX, offsetY)
 end
 
 --- Get the center X of parent width
-function getCenterX(parentWidth, objectWidth)
-    return parentWidth / 2 - objectWidth / 2
+function getCenterX(parentX, parentWidth, objectWidth)
+    return parentX + parentWidth / 2 - objectWidth / 2
 end
 
 --- Get the center Y of parent height
-function getCenterY(parentHeight, objectHeight)
-    return parentHeight / 2 - objectHeight / 2
+function getCenterY(parentY, parentHeight, objectHeight)
+    return parentY + parentHeight / 2 - objectHeight / 2
 end
