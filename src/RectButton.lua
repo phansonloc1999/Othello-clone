@@ -1,14 +1,17 @@
 ---@class RectButton
 RectButton = Class {}
 
-function RectButton:init(boxX, boxY, boxWidth, boxHeight, texturePath, textString, textColor, font)
+function RectButton:init(boxX, boxY, boxWidth, boxHeight, texturePaths, textString, textColor, font)
     self._boxX, self._boxY = boxX, boxY
     self._boxWidth, self._boxHeight = boxWidth, boxHeight
 
-    if (texturePath) then
-        self._texture = love.graphics.newImage(texturePath)
+    if (texturePaths) then
+        self._textures = {}
+        for key, path in pairs(texturePaths) do
+            self._textures[key] = love.graphics.newImage(path)
+        end
     else
-        self._texture = nil
+        self._textures = nil
     end
 
     if (textString) then
@@ -22,14 +25,20 @@ function RectButton:init(boxX, boxY, boxWidth, boxHeight, texturePath, textStrin
             textColor or {1, 1, 1}
         )
     end
+
+    self._selected = false
 end
 
 function RectButton:render()
-    if (not self._texture) then
+    if (not self._textures) then
         love.graphics.setColor(gColors.WHITE)
         love.graphics.rectangle("fill", self._boxX, self._boxY, self._boxWidth, self._boxHeight)
     else
-        love.graphics.draw(self._texture, self._boxX, self._boxY)
+        if (self._selected) then
+            love.graphics.draw(self._textures["selected"], self._boxX, self._boxY)
+        else
+            love.graphics.draw(self._textures["deselected"], self._boxX, self._boxY)
+        end
     end
 
     if (self._text) then
@@ -48,4 +57,20 @@ function RectButton:collidesWithMouse()
         1,
         1
     )
+end
+
+function RectButton:select()
+    self._selected = true
+    self._boxX, self._boxY =
+        self._boxX + math.floor((self._boxWidth - self._textures["selected"]:getWidth()) / 2),
+        self._boxY + math.floor((self._boxHeight - self._textures["selected"]:getHeight()) / 2)
+    self._boxWidth, self._boxHeight = self._textures["selected"]:getWidth(), self._textures["selected"]:getHeight()
+end
+
+function RectButton:deselect()
+    self._selected = false
+    self._boxX, self._boxY =
+        self._boxX - math.floor((self._textures["deselected"]:getWidth() - self._boxWidth) / 2),
+        self._boxY - math.floor((self._textures["deselected"]:getHeight() - self._boxHeight) / 2)
+    self._boxWidth, self._boxHeight = self._textures["deselected"]:getWidth(), self._textures["deselected"]:getHeight()
 end
