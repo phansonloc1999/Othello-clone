@@ -1,46 +1,49 @@
 ---@class MenuState
 MenuState = Class {__includes = BaseState}
 
-LARGE_DEFAULT_FONT = love.graphics.newFont(25)
+LARGE_DEFAULT_FONT = love.graphics.newFont(35)
 DEFAULT_FONT = love.graphics.setNewFont(12)
 
 function MenuState:init()
     self._playButton =
         RectButton(
         getCenterX(love.graphics.getWidth(), 100),
-        getCenterY(love.graphics.getHeight(), 30) + 20,
+        getCenterY(love.graphics.getHeight(), 30) + 50,
         100,
         30,
+        nil,
         "Play",
-        gColors.WHITE
+        gColors.BLACK
     )
 
-    local aboutButtonX, aboutButtonY = getPositionsWithOffsets(self._playButton._boxX, self._playButton._boxY, 0, 50)
+    local aboutButtonX, aboutButtonY = getPositionsWithOffsets(self._playButton._boxX, self._playButton._boxY, 0, 60)
     self._aboutButton =
         RectButton(
         aboutButtonX,
         aboutButtonY,
         self._playButton._boxWidth,
         self._playButton._boxHeight,
+        nil,
         "About",
-        gColors.WHITE
+        gColors.BLACK
     )
 
-    local quitButtonX, quitButtonY = getPositionsWithOffsets(self._aboutButton._boxX, self._aboutButton._boxY, 0, 50)
+    local quitButtonX, quitButtonY = getPositionsWithOffsets(self._aboutButton._boxX, self._aboutButton._boxY, 0, 60)
     self._quitButton =
         RectButton(
         quitButtonX,
         quitButtonY,
         self._aboutButton._boxWidth,
         self._aboutButton._boxHeight,
+        nil,
         "Quit",
-        gColors.WHITE
+        gColors.BLACK
     )
 
-    self._gameTitle = Text(0, 0, "OTHELLO", LARGE_DEFAULT_FONT)
+    self._gameTitle = Text(0, 0, "OTHELLO", LARGE_DEFAULT_FONT, gColors.WHITE)
     self._gameTitle:setPos(
         love.graphics.getWidth() / 2 - self._gameTitle._text:getWidth() / 2,
-        love.graphics.getHeight() / 3
+        love.graphics.getHeight() / 3 + 10
     )
 end
 
@@ -57,7 +60,7 @@ function MenuState:update(dt)
             love.event.quit()
         end
         if (self._playButton:collidesWithMouse()) then
-            gStateMachine:change("play")
+            gStateMachine:change("board")
         end
     end
 end

@@ -2,9 +2,9 @@
 Text = Class {}
 
 function Text:init(x, y, textString, font, color)
-    self._x, self._y = x, y
+    self._x, self._y = x or 0, y or 0
     self._text = love.graphics.newText(font or love.graphics.getFont(), textString)
-    self._width = self._text:getWidth(), self._text:getHeight()
+    self._width, self._height = self._text:getWidth(), self._text:getHeight()
     self._color = color or gColors.WHITE
 end
 
@@ -16,4 +16,12 @@ end
 
 function Text:setPos(newX, newY)
     self._x, self._y = newX, newY
+end
+
+function Text:getWidth()
+    return self._width
+end
+
+function Text:getHeight()
+    return self._height
 end
