@@ -14,6 +14,17 @@ function love.mouse.wasPressed(button)
     return love.mouse.buttonsPressed[button]
 end
 
+--- Single keyboard input
+love.keyboard.keysPressed = {}
+
+function love.keypressed(key)
+    love.keyboard.keysPressed[key] = true
+end
+
+function love.keyboard.wasPressed(key)
+    return love.keyboard.keysPressed[key]
+end
+
 function belongsTo(parentTable, subTable)
     for i = 1, #parentTable do
         for j = 1, #parentTable[i] do
