@@ -5,6 +5,8 @@ LARGE_DEFAULT_FONT = love.graphics.newFont(35)
 DEFAULT_FONT = love.graphics.setNewFont(12)
 
 function MenuState:init()
+    love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
+
     self._buttons = {}
     self._buttons.startButton =
         RectButton(
@@ -51,6 +53,9 @@ function MenuState:init()
 end
 
 function MenuState:render()
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(gBackground.default)
+
     for key, button in pairs(self._buttons) do
         button:render()
     end
@@ -63,7 +68,7 @@ function MenuState:update(dt)
             love.event.quit()
         end
         if (self._buttons.startButton:collidesWithMouse()) then
-            gStateMachine:change("board")
+            gStateMachine:change("player")
         end
     end
 

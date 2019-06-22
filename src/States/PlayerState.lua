@@ -36,6 +36,9 @@ function PlayerState:init()
 end
 
 function PlayerState:render()
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(gBackground.default)
+
     for key, button in pairs(self._buttons) do
         button:render()
     end
