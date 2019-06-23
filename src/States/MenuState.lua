@@ -46,7 +46,7 @@ function MenuState:init()
     )
 
     self._gameTitle = {
-        selected = love.graphics.newImage("assets/Title.png"),
+        selected = love.graphics.newImage("assets/MenuTitle.png"),
         y = 25
     }
     self._gameTitle.x = love.graphics.getWidth() / 2 - self._gameTitle.selected:getWidth() / 2
