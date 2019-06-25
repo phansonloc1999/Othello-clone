@@ -6,11 +6,29 @@ function love.load()
         ["menu"] = function()
             return MenuState()
         end,
-        ["play"] = function()
+        ["board"] = function()
             return BoardState()
+        end,
+        ["play"] = function()
+            return PlayState()
+        end,
+        ["player"] = function()
+            return PlayerState()
+        end,
+        ["pause"] = function()
+            return PauseState()
+        end,
+        ["score"] = function()
+            return ScoreState()
         end
     }
     gStateMachine:change("menu")
+
+    gBackground = {
+        default = love.graphics.newImage("assets/Background.png")
+    }
+
+    love.graphics.setDefaultFilter("nearest", "nearest")
 end
 
 function love.draw()
@@ -22,4 +40,7 @@ function love.update(dt)
 
     -- Reset mouse input table every frames
     love.mouse.buttonsPressed = {}
+    love.keyboard.keysPressed = {}
+
+    require("lib/lovebird").update()
 end
