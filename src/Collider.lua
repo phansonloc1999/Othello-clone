@@ -6,10 +6,8 @@ function Collider:init(x, y, width, height)
 end
 
 function Collider:checkCollision(other)
-    return self._x < other._x + other._width 
-        and other._x < self._x + self._width 
-        and self._y < other._y + other._height 
-        and other._y < self._y + self._height
+    return self._x < other._x + other._width and other._x < self._x + self._width and self._y < other._y + other._height and
+        other._y < self._y + self._height
 end
 
 function Collider:checkCollisionWithCursor()

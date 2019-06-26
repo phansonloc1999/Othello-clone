@@ -9,6 +9,7 @@ require("src/RectButton")
 require("src/Text")
 require("src/Collider")
 require("src/Board")
+require("src/Animation")
 
 require("src/StateMachine")
 require("src/States/BaseState")

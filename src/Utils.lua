@@ -25,6 +25,8 @@ function love.keyboard.wasPressed(key)
     return love.keyboard.keysPressed[key]
 end
 
+--- parentTable = {{1, 3}, {1, 2}}
+--- subTable = {1, 2}
 function belongsTo(parentTable, subTable)
     for i = 1, #parentTable do
         for j = 1, #parentTable[i] do
