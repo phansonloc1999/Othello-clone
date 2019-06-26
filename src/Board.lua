@@ -304,6 +304,7 @@ function Board:getWinner()
         return result
     end
     result.winner = "draw"
+    result.numOfPlayer = self._numOfPlayer
     return result
 end
 
