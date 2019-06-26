@@ -152,17 +152,19 @@ function Board:update(dt)
     end
 
     -- AI makes a move
-    if (self._numOfPlayer == 1) and (CURRENT_PLAYER_TURN == 2) then
+    if (self._numOfPlayer == 1) and (CURRENT_PLAYER_TURN == 2) and not self._unitsTurningOver then
         self:getAllPossibleMoves()
         if (#self._possibleMoves > 0) then
             local index = math.random(1, #self._possibleMoves)
             local row, column = self._possibleMoves[index][1], self._possibleMoves[index][2]
 
             self._matrix[row][column] = CURRENT_PLAYER_TURN
-            self:turnOverAt(row, column)
-            CURRENT_PLAYER_TURN = CURRENT_PLAYER_TURN == 1 and 2 or 1
-            self._possibleMoves = {}
-            self:getAllPossibleMoves()
+            -- Get a table of rows and columns of turned over units
+            self._unitsTurningOver = self:turnOverAt(row, column)
+            -- Get animation positions for rendering using rows and columns
+            local positions = self:getAnimationPositions()
+            -- Current player (AI) is white, start animation white to black
+            self._turningAnimations.blackToWhite:setPositions(positions)
             return
         end
     end
