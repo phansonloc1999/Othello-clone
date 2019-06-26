@@ -68,6 +68,7 @@ end
 function Board:render()
     for i = 1, self._row do
         for j = 1, self._column do
+            --- Render tile
             love.graphics.draw(self._tile, self._anchorX + CELL_WIDTH * (j - 1), self._anchorY + CELL_HEIGHT * (i - 1))
 
             --- If this unit is in turning animation, stop rendering it
@@ -94,11 +95,42 @@ function Board:render()
     end
 
     for k, move in ipairs(self._possibleMoves) do
-        love.graphics.draw(
-            self._units.hint,
-            self._anchorX + CELL_WIDTH * (move[2] - 1) + CELL_WIDTH / 2 - math.floor(self._units.hint:getWidth() / 2),
-            self._anchorY + CELL_HEIGHT * (move[1] - 1) + CELL_HEIGHT / 2 - math.floor(self._units.hint:getHeight() / 2)
+        self._currentCollider =
+            Collider(
+            self._anchorX + CELL_WIDTH * (move[2] - 1),
+            self._anchorY + CELL_HEIGHT * (move[1] - 1),
+            CELL_WIDTH,
+            CELL_HEIGHT
         )
+        --- Hovering mouse above a move render a current player unit on that tile
+        if (self._currentCollider:checkCollisionWithCursor()) then
+            if (CURRENT_PLAYER_TURN == 1) then
+                love.graphics.draw(
+                    self._units.black,
+                    self._anchorX + CELL_WIDTH * (move[2] - 1) + CELL_WIDTH / 2 -
+                        math.floor(self._units.hint:getWidth() / 2),
+                    self._anchorY + CELL_HEIGHT * (move[1] - 1) + CELL_HEIGHT / 2 -
+                        math.floor(self._units.hint:getHeight() / 2)
+                )
+            else
+                love.graphics.draw(
+                    self._units.white,
+                    self._anchorX + CELL_WIDTH * (move[2] - 1) + CELL_WIDTH / 2 -
+                        math.floor(self._units.hint:getWidth() / 2),
+                    self._anchorY + CELL_HEIGHT * (move[1] - 1) + CELL_HEIGHT / 2 -
+                        math.floor(self._units.hint:getHeight() / 2)
+                )
+            end
+        else
+            --- Render hints
+            love.graphics.draw(
+                self._units.hint,
+                self._anchorX + CELL_WIDTH * (move[2] - 1) + CELL_WIDTH / 2 -
+                    math.floor(self._units.hint:getWidth() / 2),
+                self._anchorY + CELL_HEIGHT * (move[1] - 1) + CELL_HEIGHT / 2 -
+                    math.floor(self._units.hint:getHeight() / 2)
+            )
+        end
     end
 
     if (self._unitsTurningOver) then
