@@ -26,15 +26,15 @@ function PauseState:init()
         {deselected = "assets/Reset_deselected.png", selected = "assets/Reset_selected.png"}
     )
 
-    buttonTexture = love.graphics.newImage("assets/Quit_deselected.png")
+    buttonTexture = love.graphics.newImage("assets/Menu_deselected.png")
     local tempX, tempY = getPositionsWithOffsets(self._buttons["reset"]._boxX, self._buttons["reset"]._boxY, 0, 80)
-    self._buttons["quit"] =
+    self._buttons["menu"] =
         RectButton(
         tempX,
         tempY,
         buttonTexture:getWidth(),
         buttonTexture:getHeight(),
-        {deselected = "assets/Quit_deselected.png", selected = "assets/Quit_selected.png"}
+        {deselected = "assets/Menu_deselected.png", selected = "assets/Menu_selected.png"}
     )
 
     self._gameTitle = love.graphics.newImage("assets/GameTitle.png")
@@ -78,7 +78,7 @@ function PauseState:update(dt)
                 {size = self._pausedPlayState._size, numOfPlayer = self._pausedPlayState._numOfPlayer}
             )
         end
-        if (self._buttons["quit"]:collidesWithMouse()) then
+        if (self._buttons["menu"]:collidesWithMouse()) then
             gStateMachine:change("menu")
         end
     end
