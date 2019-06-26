@@ -5,8 +5,6 @@ LARGE_DEFAULT_FONT = love.graphics.newFont(35)
 DEFAULT_FONT = love.graphics.setNewFont(12)
 
 function MenuState:init()
-    love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-
     self._buttons = {}
     self._buttons.startButton =
         RectButton(
