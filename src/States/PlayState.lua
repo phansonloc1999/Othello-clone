@@ -45,6 +45,13 @@ function PlayState:init()
         y = 11,
         score = 2
     }
+
+    self._comScore = {}
+    self._comScore.title = {
+        texture = love.graphics.newImage("assets/COMTitle.png"),
+        x = WINDOW_WIDTH - titleTexture:getWidth() - 20,
+        y = 8
+    }
 end
 
 function PlayState:enter(params)
@@ -76,7 +83,12 @@ function PlayState:render()
         self._player1Score.valueBox.y + self._player1Score.valueBox.texture:getHeight() / 2 - scoreText:getHeight() / 2
     )
 
-    love.graphics.draw(self._player2Score.title.texture, self._player2Score.title.x, self._player2Score.title.y)
+    if (self._numOfPlayer == 1) then
+        love.graphics.draw(self._comScore.title.texture, self._comScore.title.x, self._comScore.title.y)
+    else
+        love.graphics.draw(self._player2Score.title.texture, self._player2Score.title.x, self._player2Score.title.y)
+    end
+
     love.graphics.draw(
         self._player2Score.valueBox.texture,
         self._player2Score.valueBox.x,
