@@ -1,11 +1,11 @@
 ---@class PlayState
 PlayState = Class {__includes = BaseState}
 
-CURRENT_PLAYER_TURN = 1
-
 local PLAY_WINDOW_WIDTH, PLAY_WINDOW_HEIGHT = 1000, 800
 
 function PlayState:init()
+    CURRENT_PLAYER_TURN = 1
+
     local buttonTexture = love.graphics.newImage("assets/Pause_deselected.png")
     self._pauseButton =
         RectButton(
