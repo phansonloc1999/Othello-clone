@@ -63,6 +63,8 @@ function Board:init(size, numOfPlayer)
             {0.1, 0.1, 0.1}
         )
     }
+
+    self._delayAIanimationTimer = 0
 end
 
 function Board:render()
@@ -94,42 +96,45 @@ function Board:render()
         end
     end
 
-    for k, move in ipairs(self._possibleMoves) do
-        self._currentCollider =
-            Collider(
-            self._anchorX + CELL_WIDTH * (move[2] - 1),
-            self._anchorY + CELL_HEIGHT * (move[1] - 1),
-            CELL_WIDTH,
-            CELL_HEIGHT
-        )
-        --- Hovering mouse above a move render a current player unit on that tile
-        if (self._currentCollider:checkCollisionWithCursor()) then
-            if (CURRENT_PLAYER_TURN == 1) then
-                love.graphics.draw(
-                    self._units.black,
-                    self._anchorX + CELL_WIDTH * (move[2] - 1) + CELL_WIDTH / 2 -
-                        math.floor(self._units.hint:getWidth() / 2),
-                    self._anchorY + CELL_HEIGHT * (move[1] - 1) + CELL_HEIGHT / 2 -
-                        math.floor(self._units.hint:getHeight() / 2)
-                )
+    -- If player vs COM, do not render AI's possible move hints
+    if CURRENT_PLAYER_TURN ~= 2 or self._numOfPlayer ~= 1 then
+        for k, move in ipairs(self._possibleMoves) do
+            self._currentCollider =
+                Collider(
+                self._anchorX + CELL_WIDTH * (move[2] - 1),
+                self._anchorY + CELL_HEIGHT * (move[1] - 1),
+                CELL_WIDTH,
+                CELL_HEIGHT
+            )
+            --- Hovering mouse above a move render a current player unit on that tile
+            if (self._currentCollider:checkCollisionWithCursor()) then
+                if (CURRENT_PLAYER_TURN == 1) then
+                    love.graphics.draw(
+                        self._units.black,
+                        self._anchorX + CELL_WIDTH * (move[2] - 1) + CELL_WIDTH / 2 -
+                            math.floor(self._units.hint:getWidth() / 2),
+                        self._anchorY + CELL_HEIGHT * (move[1] - 1) + CELL_HEIGHT / 2 -
+                            math.floor(self._units.hint:getHeight() / 2)
+                    )
+                else
+                    love.graphics.draw(
+                        self._units.white,
+                        self._anchorX + CELL_WIDTH * (move[2] - 1) + CELL_WIDTH / 2 -
+                            math.floor(self._units.hint:getWidth() / 2),
+                        self._anchorY + CELL_HEIGHT * (move[1] - 1) + CELL_HEIGHT / 2 -
+                            math.floor(self._units.hint:getHeight() / 2)
+                    )
+                end
             else
+                --- Render hints
                 love.graphics.draw(
-                    self._units.white,
+                    self._units.hint,
                     self._anchorX + CELL_WIDTH * (move[2] - 1) + CELL_WIDTH / 2 -
                         math.floor(self._units.hint:getWidth() / 2),
                     self._anchorY + CELL_HEIGHT * (move[1] - 1) + CELL_HEIGHT / 2 -
                         math.floor(self._units.hint:getHeight() / 2)
                 )
             end
-        else
-            --- Render hints
-            love.graphics.draw(
-                self._units.hint,
-                self._anchorX + CELL_WIDTH * (move[2] - 1) + CELL_WIDTH / 2 -
-                    math.floor(self._units.hint:getWidth() / 2),
-                self._anchorY + CELL_HEIGHT * (move[1] - 1) + CELL_HEIGHT / 2 -
-                    math.floor(self._units.hint:getHeight() / 2)
-            )
         end
     end
 
@@ -139,6 +144,18 @@ function Board:render()
         else
             self._turningAnimations.blackToWhite:render()
         end
+    end
+
+    if (self._lastAIMove) then
+        love.graphics.setColor(1, 0, 0)
+        love.graphics.rectangle(
+            "line",
+            self._anchorX + CELL_WIDTH * (self._lastAIMove[2] - 1),
+            self._anchorY + CELL_HEIGHT * (self._lastAIMove[1] - 1),
+            50,
+            50
+        )
+        love.graphics.setColor(1, 1, 1)
     end
 end
 
@@ -157,6 +174,7 @@ function Board:update(dt)
         if (#self._possibleMoves > 0) then
             local index = math.random(1, #self._possibleMoves)
             local row, column = self._possibleMoves[index][1], self._possibleMoves[index][2]
+            self._lastAIMove = {row, column}
 
             self._matrix[row][column] = CURRENT_PLAYER_TURN
             -- Get a table of rows and columns of turned over units
@@ -165,42 +183,53 @@ function Board:update(dt)
             local positions = self:getAnimationPositions()
             -- Current player (AI) is white, start animation white to black
             self._turningAnimations.blackToWhite:setPositions(positions)
+
+            self._delayAIanimationTimer = 2
             return
         end
     end
 
-    -- Player makes a move
-    for i = 1, self._row do
-        for j = 1, self._column do
-            self._currentCollider =
-                Collider(
-                self._anchorX + CELL_WIDTH * (j - 1),
-                self._anchorY + CELL_HEIGHT * (i - 1),
-                CELL_WIDTH,
-                CELL_HEIGHT
-            )
-            if (self._currentCollider:checkCollisionWithCursor()) then
-                if (love.mouse.wasPressed(1) and belongsTo(self._possibleMoves, {i, j})) then
-                    self._matrix[i][j] = CURRENT_PLAYER_TURN
+    -- If AI making a move, stop player from interfering with that
+    if (self._numOfPlayer ~= 1 or CURRENT_PLAYER_TURN ~= 2) then
+        -- Player makes a move
+        for i = 1, self._row do
+            for j = 1, self._column do
+                self._currentCollider =
+                    Collider(
+                    self._anchorX + CELL_WIDTH * (j - 1),
+                    self._anchorY + CELL_HEIGHT * (i - 1),
+                    CELL_WIDTH,
+                    CELL_HEIGHT
+                )
+                if (self._currentCollider:checkCollisionWithCursor()) then
+                    if (love.mouse.wasPressed(1) and belongsTo(self._possibleMoves, {i, j})) then
+                        self._matrix[i][j] = CURRENT_PLAYER_TURN
 
-                    -- Get a table of rows and columns of turned over units
-                    self._unitsTurningOver = self:turnOverAt(i, j)
-                    -- Get animation positions for rendering using rows and columns
-                    local positions = self:getAnimationPositions()
+                        -- Get a table of rows and columns of turned over units
+                        self._unitsTurningOver = self:turnOverAt(i, j)
+                        -- Get animation positions for rendering using rows and columns
+                        local positions = self:getAnimationPositions()
 
-                    -- If current player is black, start animation white to black
-                    if (CURRENT_PLAYER_TURN == 1) then
-                        self._turningAnimations.whiteToBlack:setPositions(positions)
-                    else
-                        self._turningAnimations.blackToWhite:setPositions(positions)
+                        -- If current player is black, start animation white to black
+                        if (CURRENT_PLAYER_TURN == 1) then
+                            self._turningAnimations.whiteToBlack:setPositions(positions)
+                        else
+                            self._turningAnimations.blackToWhite:setPositions(positions)
+                        end
+                        return
                     end
-                    return
                 end
             end
         end
     end
 
-    self:updateTurningAnimations(dt)
+    if (self._delayAIanimationTimer >= 0) then
+        self._delayAIanimationTimer = math.max(0, self._delayAIanimationTimer - dt)
+    end
+
+    if (self._delayAIanimationTimer == 0) then
+        self:updateTurningAnimations(dt)
+    end
 end
 
 function Board:getPossibleMovesAt(row, column)
@@ -254,19 +283,22 @@ function Board:turnOverAt(row, column)
     local first, last
     for i = 1, self._column do
         if (self._matrix[row][i] == CURRENT_PLAYER_TURN) then
-            if (not first) then
-                first = i
-            else
-                last = i
+            first = i
+            local j = i + 1
+            while (self._matrix[row][j] ~= CURRENT_PLAYER_TURN and self._matrix[row][j] ~= 0 and j <= self._column) do
+                j = j + 1
             end
-        elseif (self._matrix[row][i] == 0) then
-            first, last = nil, nil
-        end
+            if (self._matrix[row][j] == CURRENT_PLAYER_TURN) then
+                last = j
+            elseif (self._matrix[row][j] == 0) then
+                first, last = nil, nil
+            end
 
-        if (first and last and first < last) then
-            for j = first + 1, last - 1 do
-                self._matrix[row][j] = CURRENT_PLAYER_TURN
-                table.insert(turnedOver, {row, j})
+            if (first and last and first < last) then
+                for j = first + 1, last - 1 do
+                    self._matrix[row][j] = CURRENT_PLAYER_TURN
+                    table.insert(turnedOver, {row, j})
+                end
             end
         end
     end
@@ -274,19 +306,24 @@ function Board:turnOverAt(row, column)
     local first, last
     for i = 1, self._row do
         if (self._matrix[i][column] == CURRENT_PLAYER_TURN) then
-            if (not first) then
-                first = i
-            else
-                last = i
+            first = i
+            local j = i + 1
+            while (j <= self._row and self._matrix[j][column] ~= CURRENT_PLAYER_TURN and self._matrix[j][column] ~= 0) do
+                j = j + 1
             end
-        elseif (self._matrix[i][column] == 0) then
-            first, last = nil, nil
-        end
+            if (j <= self._row) then
+                if (self._matrix[j][column] == CURRENT_PLAYER_TURN) then
+                    last = j
+                elseif (self._matrix[j][column] == 0) then
+                    first, last = nil, nil
+                end
 
-        if (first and last and first < last) then
-            for j = first + 1, last - 1 do
-                self._matrix[j][column] = CURRENT_PLAYER_TURN
-                table.insert(turnedOver, {j, column})
+                if (first and last and first < last) then
+                    for j = first + 1, last - 1 do
+                        self._matrix[j][column] = CURRENT_PLAYER_TURN
+                        table.insert(turnedOver, {j, column})
+                    end
+                end
             end
         end
     end
