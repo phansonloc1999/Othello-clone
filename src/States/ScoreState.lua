@@ -17,15 +17,15 @@ function ScoreState:init()
         nil
     )
 
-    texture = love.graphics.newImage("assets/Quit_deselected.png")
+    texture = love.graphics.newImage("assets/Menu_deselected.png")
     local tempX, tempY = getPositionsWithOffsets(self._buttons.restart._boxX, self._buttons.restart._boxY, 0, 60)
-    self._buttons["quit"] =
+    self._buttons["menu"] =
         RectButton(
         tempX,
         tempY,
         texture:getWidth(),
         texture:getHeight(),
-        {deselected = "assets/Quit_deselected.png", selected = "assets/Quit_selected.png"},
+        {deselected = "assets/Menu_deselected.png", selected = "assets/Menu_selected.png"},
         nil
     )
 
@@ -76,13 +76,6 @@ function ScoreState:enter(params)
                     texture = texture,
                     x = WINDOW_WIDTH / 2 - texture:getWidth() / 2,
                     y = 30
-                }
-
-                texture = love.graphics.newImage("assets/Score/ComTitle.png")
-                self._winnerTitle = {
-                    texture = texture,
-                    x = self._resultTitle.x + self._resultTitle.texture:getWidth() / 2 - texture:getWidth() / 2,
-                    y = self._resultTitle.y + self._resultTitle.texture:getHeight()
                 }
             else
                 texture = love.graphics.newImage("assets/Score/Win.png")
@@ -140,8 +133,8 @@ function ScoreState:update(dt)
         if (self._buttons.restart:collidesWithMouse()) then
             gStateMachine:change("play", {size = self._boardSize, numOfPlayer = self._numOfPlayer})
         end
-        if (self._buttons.quit:collidesWithMouse()) then
-            love.event.quit()
+        if (self._buttons.menu:collidesWithMouse()) then
+            gStateMachine:change("menu")
         end
     end
 end
