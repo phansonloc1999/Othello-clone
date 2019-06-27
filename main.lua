@@ -33,9 +33,16 @@ end
 
 function love.draw()
     gStateMachine:render()
+
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.print(love.timer.getFPS())
 end
 
 function love.update(dt)
+    if dt < 1 / 30 then
+        love.timer.sleep(1 / 30 - dt)
+    end
+
     gStateMachine:update(dt)
 
     -- Reset mouse input table every frames
