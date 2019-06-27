@@ -12,7 +12,7 @@ function Board:init(size, numOfPlayer)
     self._matrix = {}
     self._currentCollider = nil
     self._possibleMoves = {}
-    self._size = BOARD_SIZES[size]
+    self._size = size
     self._row, self._column = BOARD_SIZES[size].row, BOARD_SIZES[size].column
     self._anchorX, self._anchorY =
         WINDOW_WIDTH / 2 - self._row * CELL_WIDTH / 2,
@@ -164,7 +164,9 @@ function Board:update(dt)
         CURRENT_PLAYER_TURN = CURRENT_PLAYER_TURN == 1 and 2 or 1
         self:getAllPossibleMoves()
         if (#self._possibleMoves == 0) then
-            gStateMachine:change("score", self:getWinner())
+            local params = self:getWinner()
+            params.size = self._size
+            gStateMachine:change("score", params)
         end
     end
 

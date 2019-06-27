@@ -47,6 +47,7 @@ end
 function ScoreState:enter(params)
     self._player1Moves, self._player2Moves = params[1], params[2]
     self._numOfPlayer = params.numOfPlayer
+    self._boardSize = params.size
 
     local font = love.graphics.newFont("assets/Font/font.ttf", 35)
     local text = love.graphics.newText(font, self._player1Moves .. " : " .. self._player2Moves)
@@ -137,7 +138,7 @@ function ScoreState:update(dt)
 
     if (love.mouse.wasPressed(1)) then
         if (self._buttons.restart:collidesWithMouse()) then
-            gStateMachine:change("menu")
+            gStateMachine:change("play", {size = self._boardSize, numOfPlayer = self._numOfPlayer})
         end
         if (self._buttons.quit:collidesWithMouse()) then
             love.event.quit()
