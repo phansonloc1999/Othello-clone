@@ -2,8 +2,6 @@
 ScoreState = Class {__includes = BaseState}
 
 function ScoreState:init()
-    love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT)
-
     self._buttons = {}
 
     local texture = love.graphics.newImage("assets/Restart_deselected.png")

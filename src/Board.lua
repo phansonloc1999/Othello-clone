@@ -166,6 +166,7 @@ function Board:update(dt)
         if (#self._possibleMoves == 0) then
             local params = self:getWinner()
             params.size = self._size
+            params.numOfPlayer = self._numOfPlayer
             gStateMachine:change("score", params)
         end
     end
@@ -343,7 +344,6 @@ function Board:getWinner()
         return result
     end
     result.winner = "draw"
-    result.numOfPlayer = self._numOfPlayer
     return result
 end
 
