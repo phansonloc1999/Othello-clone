@@ -297,7 +297,7 @@ function Board:turnOverAt(row, column)
                 first, last = nil, nil
             end
 
-            if (first and last and first < last) then
+            if (first and last and first < last and (first == column or last == column)) then
                 for j = first + 1, last - 1 do
                     self._matrix[row][j] = CURRENT_PLAYER_TURN
                     table.insert(turnedOver, {row, j})
@@ -321,7 +321,7 @@ function Board:turnOverAt(row, column)
                     first, last = nil, nil
                 end
 
-                if (first and last and first < last) then
+                if (first and last and first < last and (first == row or last == row)) then
                     for j = first + 1, last - 1 do
                         self._matrix[j][column] = CURRENT_PLAYER_TURN
                         table.insert(turnedOver, {j, column})
