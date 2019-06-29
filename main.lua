@@ -48,6 +48,4 @@ function love.update(dt)
     -- Reset mouse input table every frames
     love.mouse.buttonsPressed = {}
     love.keyboard.keysPressed = {}
-
-    require("lib/lovebird").update()
 end
