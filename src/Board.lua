@@ -2,7 +2,7 @@
 Board = Class {}
 
 local CELL_WIDTH, CELL_HEIGHT = 50, 50
-local BOARD_SIZES = {
+BOARD_SIZES = {
     small = {row = 4, column = 4},
     medium = {row = 6, column = 6},
     big = {row = 8, column = 8}

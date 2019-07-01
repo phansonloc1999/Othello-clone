@@ -110,10 +110,9 @@ function BoardState:update(dt)
         end
     end
 
-    local boardSizes = {"small", "medium", "big"}
-    for key = 1, #boardSizes do
-        if (self._buttons[boardSizes[key]]:collidesWithMouse() and love.mouse.wasPressed(1)) then
-            gStateMachine:change("play", {size = boardSizes[key], numOfPlayer = self._numOfPlayer})
+    for key, value in pairs(BOARD_SIZES)  do
+        if (self._buttons[key]:collidesWithMouse() and love.mouse.wasPressed(1)) then
+            gStateMachine:change("play", {size = key, numOfPlayer = self._numOfPlayer})
         end
     end
 end
