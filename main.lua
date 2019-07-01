@@ -27,7 +27,13 @@ function love.load()
     gBackground = {
         default = love.graphics.newImage("assets/Background.png")
     }
+
     gFont = love.graphics.newFont("assets/Font/font.ttf", 14)
+
+    gSounds = {
+        hover = love.audio.newSource("assets/Sounds/hover.ogg", "static"),
+        move = love.audio.newSource("assets/Sounds/move.wav", "static")
+    }
 
     love.graphics.setDefaultFilter("nearest", "nearest")
 end

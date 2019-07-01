@@ -175,6 +175,9 @@ function Board:update(dt)
     if (self._numOfPlayer == 1) and (CURRENT_PLAYER_TURN == 2) and not self._unitsTurningOver then
         self:getAllPossibleMoves()
         if (#self._possibleMoves > 0) then
+            love.audio.stop(gSounds.move)
+            love.audio.play(gSounds.move)
+
             local index = math.random(1, #self._possibleMoves)
             local row, column = self._possibleMoves[index][1], self._possibleMoves[index][2]
             self._lastAIMove = {row, column}
@@ -219,6 +222,7 @@ function Board:update(dt)
                         else
                             self._turningAnimations.blackToWhite:setPositions(positions)
                         end
+                        love.audio.play(gSounds.move)
                         return
                     end
                 end
