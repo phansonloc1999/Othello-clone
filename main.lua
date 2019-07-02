@@ -42,7 +42,6 @@ function love.draw()
     gStateMachine:render()
 
     love.graphics.setColor(1, 0, 0)
-    love.graphics.print(love.timer.getFPS())
 end
 
 function love.update(dt)
