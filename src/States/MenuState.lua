@@ -67,6 +67,7 @@ function MenuState:update(dt)
         end
         if (self._buttons.startButton:collidesWithMouse()) then
             gStateMachine:change("player")
+            love.audio.play(gSounds.select)
         end
     end
 

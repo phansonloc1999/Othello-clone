@@ -65,8 +65,6 @@ function RectButton:select()
         self._boxX + math.floor((self._boxWidth - self._textures["selected"]:getWidth()) / 2),
         self._boxY + math.floor((self._boxHeight - self._textures["selected"]:getHeight()) / 2)
     self._boxWidth, self._boxHeight = self._textures["selected"]:getWidth(), self._textures["selected"]:getHeight()
-
-    love.audio.play(gSounds.hover)
 end
 
 function RectButton:deselect()
