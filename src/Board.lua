@@ -65,6 +65,7 @@ function Board:init(size, numOfPlayer)
     }
 
     self._delayAIanimationTimer = 0
+    self._delayAIDecisionTimer = 0
 end
 
 function Board:render()
@@ -172,7 +173,7 @@ function Board:update(dt)
     end
 
     -- AI makes a move
-    if (self._numOfPlayer == 1) and (CURRENT_PLAYER_TURN == 2) and not self._unitsTurningOver then
+    if (self._numOfPlayer == 1) and (CURRENT_PLAYER_TURN == 2) and not self._unitsTurningOver and (self._delayAIDecisionTimer <= 0) then
         self:getAllPossibleMoves()
         if (#self._possibleMoves > 0) then
             love.audio.stop(gSounds.move)
@@ -219,6 +220,9 @@ function Board:update(dt)
                         -- If current player is black, start animation white to black
                         if (CURRENT_PLAYER_TURN == 1) then
                             self._turningAnimations.whiteToBlack:setPositions(positions)
+                            if (self._numOfPlayer == 1) then
+                                self._delayAIDecisionTimer = 2
+                            end
                         else
                             self._turningAnimations.blackToWhite:setPositions(positions)
                         end
@@ -236,6 +240,10 @@ function Board:update(dt)
 
     if (self._delayAIanimationTimer == 0) then
         self:updateTurningAnimations(dt)
+    end
+
+    if (self._delayAIDecisionTimer >= 0) then
+        self._delayAIDecisionTimer = math.max(0, self._delayAIDecisionTimer - dt)
     end
 end
 
