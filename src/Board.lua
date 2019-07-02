@@ -221,7 +221,7 @@ function Board:update(dt)
                         if (CURRENT_PLAYER_TURN == 1) then
                             self._turningAnimations.whiteToBlack:setPositions(positions)
                             if (self._numOfPlayer == 1) then
-                                self._delayAIDecisionTimer = 2
+                                self._delayAIDecisionTimer = 1.5
                             end
                         else
                             self._turningAnimations.blackToWhite:setPositions(positions)
