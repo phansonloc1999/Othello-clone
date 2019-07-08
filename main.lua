@@ -32,7 +32,8 @@ function love.load()
 
     gSounds = {
         select = love.audio.newSource("assets/Sounds/select.ogg", "static"),
-        move = love.audio.newSource("assets/Sounds/move.wav", "static")
+        move = love.audio.newSource("assets/Sounds/move.wav", "static"),
+        score = love.audio.newSource("assets/Sounds/score.wav", "static")
     }
 
     love.graphics.setDefaultFilter("nearest", "nearest")

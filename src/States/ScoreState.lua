@@ -43,6 +43,8 @@ function ScoreState:init()
 end
 
 function ScoreState:enter(params)
+    love.audio.play(gSounds.score)
+
     self._player1Moves, self._player2Moves = params[1], params[2]
     self._numOfPlayer = params.numOfPlayer
     self._boardSize = params.size
