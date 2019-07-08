@@ -161,10 +161,19 @@ function Board:render()
 end
 
 function Board:update(dt)
-    if (#self._possibleMoves == 0) then
+    if (#self._possibleMoves == 0 and not self._scoreStateTimer) then
         CURRENT_PLAYER_TURN = CURRENT_PLAYER_TURN == 1 and 2 or 1
         self:getAllPossibleMoves()
         if (#self._possibleMoves == 0) then
+            self._scoreStateTimer = 2
+        end
+    end
+
+    if (self._scoreStateTimer) then
+        print(self._scoreStateTimer)
+        if (self._scoreStateTimer > 0) then
+            self._scoreStateTimer = self._scoreStateTimer - dt
+        else
             local params = self:getWinner()
             params.size = self._size
             params.numOfPlayer = self._numOfPlayer
