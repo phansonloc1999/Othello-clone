@@ -173,7 +173,10 @@ function Board:update(dt)
     end
 
     -- AI makes a move
-    if (self._numOfPlayer == 1) and (CURRENT_PLAYER_TURN == 2) and not self._unitsTurningOver and (self._delayAIDecisionTimer <= 0) then
+    if
+        (self._numOfPlayer == 1) and (CURRENT_PLAYER_TURN == 2) and not self._unitsTurningOver and
+            (self._delayAIDecisionTimer <= 0)
+     then
         self:getAllPossibleMoves()
         if (#self._possibleMoves > 0) then
             love.audio.stop(gSounds.move)
@@ -256,7 +259,7 @@ function Board:getPossibleMovesAt(row, column)
         table.insert(self._possibleMoves, {row, index})
     end
 
-    local index = column + 1
+    index = column + 1
     while (self._matrix[row][index] ~= CURRENT_PLAYER_TURN and self._matrix[row][index] ~= 0 and
         index <= self._column - 1) do
         index = index + 1
@@ -265,7 +268,7 @@ function Board:getPossibleMovesAt(row, column)
         table.insert(self._possibleMoves, {row, index})
     end
 
-    local index = row - 1
+    index = row - 1
     while (index >= 2 and self._matrix[index][column] ~= CURRENT_PLAYER_TURN and self._matrix[index][column] ~= 0) do
         index = index - 1
     end
@@ -273,13 +276,67 @@ function Board:getPossibleMovesAt(row, column)
         table.insert(self._possibleMoves, {index, column})
     end
 
-    local index = row + 1
+    index = row + 1
     while (index <= self._row - 1 and self._matrix[index][column] ~= CURRENT_PLAYER_TURN and
         self._matrix[index][column] ~= 0) do
         index = index + 1
     end
     if (index - 1 ~= row and self._matrix[index][column] == 0) then
         table.insert(self._possibleMoves, {index, column})
+    end
+
+    -- Get 2 diagonal possible moves
+    -- Left diagonal
+    --- Upper part
+    if (row > 1 and column > 1) then
+        -- Iterate diagonally from right to left
+        local rowIter, columnIter = row - 1, column - 1
+        while (rowIter > 1 and columnIter > 1 and self._matrix[rowIter][columnIter] ~= CURRENT_PLAYER_TURN and
+            self._matrix[rowIter][columnIter] ~= 0) do
+            rowIter, columnIter = rowIter - 1, columnIter - 1
+        end
+        if (self._matrix[rowIter][columnIter] == 0 and rowIter ~= row - 1 and columnIter ~= column - 1) then
+            table.insert(self._possibleMoves, {rowIter, columnIter})
+        end
+    end
+    --- Lower part
+    if (row < self._row and column < self._column) then
+        -- Iterate diagonally from left to right
+        local rowIter, columnIter = row + 1, column + 1
+        while (rowIter < self._row and columnIter < self._column and
+            self._matrix[rowIter][columnIter] ~= CURRENT_PLAYER_TURN and
+            self._matrix[rowIter][columnIter] ~= 0) do
+            rowIter, columnIter = rowIter + 1, columnIter + 1
+        end
+        if (self._matrix[rowIter][columnIter] == 0 and rowIter ~= row + 1 and columnIter ~= column + 1) then
+            table.insert(self._possibleMoves, {rowIter, columnIter})
+        end
+    end
+    -- Right diagonal
+    --- Upper part
+    if (row > 1 and column < self._column) then
+        -- Iterate diagonally from left to right
+        local rowIter, columnIter = row - 1, column + 1
+        while (rowIter > 1 and columnIter > 1 and self._matrix[rowIter][columnIter] ~= CURRENT_PLAYER_TURN and
+            self._matrix[rowIter][columnIter] ~= 0) do
+            rowIter, columnIter = rowIter - 1, columnIter + 1
+        end
+        if (self._matrix[rowIter][columnIter] == 0 and rowIter ~= row - 1 and columnIter ~= column + 1) then
+            table.insert(self._possibleMoves, {rowIter, columnIter})
+        end
+    end
+    --- Lower part
+    if (row < self._row and column > 1) then
+        -- Iterate diagonally from right to left
+        local rowIter, columnIter = row + 1, column - 1
+        while (rowIter < self._row and columnIter < self._column and
+            self._matrix[rowIter][columnIter] ~= CURRENT_PLAYER_TURN and
+            self._matrix[rowIter][columnIter] ~= 0) do
+            rowIter, columnIter = rowIter + 1, columnIter - 1
+        end
+        if (self._matrix[rowIter][columnIter] == 0 and rowIter ~= row + 1 and columnIter ~= column - 1) then
+            table.insert(self._possibleMoves, {rowIter, columnIter})
+        end
     end
 end
 
@@ -318,7 +375,6 @@ function Board:turnOverAt(row, column)
         end
     end
 
-    local first, last
     for i = 1, self._row do
         if (self._matrix[i][column] == CURRENT_PLAYER_TURN) then
             first = i
@@ -341,6 +397,70 @@ function Board:turnOverAt(row, column)
                 end
             end
         end
+    end
+
+    local beginRow, beginColumn = row, column
+    -- Find left most positions of diagonal
+    while (beginRow > 1 and beginColumn > 1) do
+        beginRow, beginColumn = beginRow - 1, beginColumn - 1
+    end
+    while (beginRow < self._row and beginColumn < self._column) do
+        -- If current unit is current player's move, turn over inbetween opponent's units
+        if (self._matrix[beginRow][beginColumn] == CURRENT_PLAYER_TURN) then
+            -- Find right nearest symetrical current player's move vertically
+            local endRow, endColumn = beginRow + 1, beginColumn + 1
+            while (endRow < self._row and endColumn < self._column and
+                self._matrix[endRow][endColumn] ~= CURRENT_PLAYER_TURN and
+                self._matrix[endRow][endColumn] ~= 0) do
+                endRow, endColumn = endRow + 1, endColumn + 1
+            end
+            -- If end and begin unit is recent player's move
+            if
+                ((endRow == row and endColumn == column) or
+                    (beginRow == row and beginColumn == column) and self._matrix[endRow][endColumn] ~= 0)
+             then
+                beginRow, beginColumn = beginRow + 1, beginColumn + 1
+                while (beginRow < endRow and beginColumn < endColumn) do
+                    table.insert(turnedOver, {beginRow, beginColumn})
+                    self._matrix[beginRow][beginColumn] = CURRENT_PLAYER_TURN
+                    beginRow, beginColumn = beginRow + 1, beginColumn + 1
+                end
+                beginRow, beginColumn = endRow - 1, endColumn - 1
+            end
+        end
+        -- check next unit on the right of the same diagonal
+        beginRow, beginColumn = beginRow + 1, beginColumn + 1
+    end
+
+    beginRow, beginColumn = row, column
+    -- Find right most positions of diagonal
+    while (beginRow > 1 and beginColumn < self._column) do
+        beginRow, beginColumn = beginRow - 1, beginColumn + 1
+    end
+    while (beginRow < self._row and beginColumn > 1) do
+        -- If current unit is current player's move, turn over inbetween opponent's units
+        if (self._matrix[beginRow][beginColumn] == CURRENT_PLAYER_TURN) then
+            -- Find left nearest symetrical current player's move vertically
+            local endRow, endColumn = beginRow + 1, beginColumn - 1
+            while (endRow < self._row and endColumn > 1 and self._matrix[endRow][endColumn] ~= CURRENT_PLAYER_TURN and
+                self._matrix[endRow][endColumn] ~= 0) do
+                endRow, endColumn = endRow + 1, endColumn - 1
+            end
+            if
+                ((endRow == row and endColumn == column) or
+                    (beginRow == row and beginColumn == column) and self._matrix[endRow][endColumn] ~= 0)
+             then
+                beginRow, beginColumn = beginRow + 1, beginColumn - 1
+                while (beginRow < endRow and beginColumn > endColumn) do
+                    table.insert(turnedOver, {beginRow, beginColumn})
+                    self._matrix[beginRow][beginColumn] = CURRENT_PLAYER_TURN
+                    beginRow, beginColumn = beginRow + 1, beginColumn - 1
+                end
+                beginRow, beginColumn = endRow - 1, endColumn + 1
+            end
+        end
+        -- check left next unit of the same diagonal
+        beginRow, beginColumn = beginRow + 1, beginColumn - 1
     end
 
     return turnedOver
