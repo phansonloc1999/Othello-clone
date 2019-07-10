@@ -1,6 +1,18 @@
 require("src/Dependencies")
 
 function love.load()
+    gBackground = {
+        default = love.graphics.newImage("assets/Background.png")
+    }
+
+    gFont = love.graphics.newFont("assets/Font/font.ttf", 14)
+
+    gSounds = {
+        select = love.audio.newSource("assets/Sounds/select.ogg", "static"),
+        move = love.audio.newSource("assets/Sounds/move.wav", "static"),
+        score = love.audio.newSource("assets/Sounds/score.wav", "static")
+    }
+
     gStateMachine =
         StateMachine {
         ["menu"] = function()
@@ -20,29 +32,18 @@ function love.load()
         end,
         ["score"] = function()
             return ScoreState()
+        end,
+        ["about"] = function()
+            return AboutState()
         end
     }
     gStateMachine:change("menu")
-
-    gBackground = {
-        default = love.graphics.newImage("assets/Background.png")
-    }
-
-    gFont = love.graphics.newFont("assets/Font/font.ttf", 14)
-
-    gSounds = {
-        select = love.audio.newSource("assets/Sounds/select.ogg", "static"),
-        move = love.audio.newSource("assets/Sounds/move.wav", "static"),
-        score = love.audio.newSource("assets/Sounds/score.wav", "static")
-    }
 
     love.graphics.setDefaultFilter("nearest", "nearest")
 end
 
 function love.draw()
     gStateMachine:render()
-
-    love.graphics.setColor(1, 0, 0)
 end
 
 function love.update(dt)
