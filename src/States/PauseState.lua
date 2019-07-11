@@ -63,7 +63,7 @@ function PauseState:update(dt)
 
     if (love.mouse.wasPressed(1)) then
         if (self._buttons["back"]:collidesWithMouse()) then
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
             gStateMachine:change(
                 "play",
                 {
@@ -74,19 +74,25 @@ function PauseState:update(dt)
             )
         end
         if (self._buttons["reset"]:collidesWithMouse()) then
-            love.audio.play(gSounds.select)
+            AudioManager.stop("play")
+            AudioManager.play("select")
             gStateMachine:change(
                 "play",
                 {size = self._pausedPlayState._size, numOfPlayer = self._pausedPlayState._numOfPlayer}
             )
         end
         if (self._buttons["menu"]:collidesWithMouse()) then
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
             gStateMachine:change("menu")
         end
     end
 end
 
 function PauseState:enter(params)
+    AudioManager.pause("play")
     self._pausedPlayState = params.pausedPlayState
+end
+
+function PauseState:exit()
+    AudioManager.play("play")
 end

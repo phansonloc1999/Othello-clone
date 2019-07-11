@@ -56,15 +56,15 @@ function PlayerState:update(dt)
 
     if (love.mouse.wasPressed(1)) then
         if (self._buttons._1PlayerButton:collidesWithMouse()) then
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
             gStateMachine:change("board", {numOfPlayer = 1})
         end
         if (self._buttons._2PlayerButton:collidesWithMouse()) then
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
             gStateMachine:change("board", {numOfPlayer = 2})
         end
         if (self._buttons._backButton:collidesWithMouse()) then
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
             gStateMachine:change("menu")
         end
     end

@@ -117,7 +117,7 @@ function PlayState:update(dt)
 
     if (love.mouse.wasPressed(1)) then
         if (self._pauseButton:collidesWithMouse()) then
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
             gStateMachine:change("pause", {pausedPlayState = self})
         end
     end

@@ -10,6 +10,7 @@ require("src/Text")
 require("src/Collider")
 require("src/Board")
 require("src/Animation")
+require("src/AudioManager")
 
 require("src/StateMachine")
 require("src/States/BaseState")

@@ -67,11 +67,11 @@ function MenuState:update(dt)
         end
         if (self._buttons.startButton:collidesWithMouse()) then
             gStateMachine:change("player")
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
         end
         if (self._buttons.aboutButton:collidesWithMouse()) then
             gStateMachine:change("about")
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
         end
     end
 
@@ -83,4 +83,8 @@ function MenuState:update(dt)
             button:deselect()
         end
     end
+end
+
+function MenuState:enter(params)
+    AudioManager.play("play")
 end

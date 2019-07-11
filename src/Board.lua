@@ -188,8 +188,8 @@ function Board:update(dt)
      then
         self:getAllPossibleMoves()
         if (#self._possibleMoves > 0) then
-            love.audio.stop(gSounds.move)
-            love.audio.play(gSounds.move)
+            AudioManager.stop("move")
+            AudioManager.play("move")
 
             local index = math.random(1, #self._possibleMoves)
             local row, column = self._possibleMoves[index][1], self._possibleMoves[index][2]
@@ -238,7 +238,7 @@ function Board:update(dt)
                         else
                             self._turningAnimations.blackToWhite:setPositions(positions)
                         end
-                        love.audio.play(gSounds.move)
+                        AudioManager.play("move")
                         return
                     end
                 end

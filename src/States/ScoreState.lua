@@ -43,7 +43,8 @@ function ScoreState:init()
 end
 
 function ScoreState:enter(params)
-    love.audio.play(gSounds.score)
+    AudioManager.stop("play")
+    AudioManager.play("score")
 
     self._player1Moves, self._player2Moves = params[1], params[2]
     self._numOfPlayer = params.numOfPlayer
@@ -131,11 +132,11 @@ function ScoreState:update(dt)
 
     if (love.mouse.wasPressed(1)) then
         if (self._buttons.restart:collidesWithMouse()) then
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
             gStateMachine:change("play", {size = self._boardSize, numOfPlayer = self._numOfPlayer})
         end
         if (self._buttons.menu:collidesWithMouse()) then
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
             gStateMachine:change("menu")
         end
     end

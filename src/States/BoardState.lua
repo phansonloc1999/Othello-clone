@@ -98,7 +98,7 @@ end
 
 function BoardState:update(dt)
     if (self._buttons["back"]:collidesWithMouse() and love.mouse.wasPressed(1)) then
-        love.audio.play(gSounds.select)
+        AudioManager.play("select")
         gStateMachine:change("player")
     end
 
@@ -113,7 +113,7 @@ function BoardState:update(dt)
 
     for key, value in pairs(BOARD_SIZES)  do
         if (self._buttons[key]:collidesWithMouse() and love.mouse.wasPressed(1)) then
-            love.audio.play(gSounds.select)
+            AudioManager.play("select")
             gStateMachine:change("play", {size = key, numOfPlayer = self._numOfPlayer})
         end
     end

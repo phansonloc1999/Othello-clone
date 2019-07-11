@@ -7,11 +7,11 @@ function love.load()
 
     gFont = love.graphics.newFont("assets/Font/font.ttf", 14)
 
-    gSounds = {
-        select = love.audio.newSource("assets/Sounds/select.ogg", "static"),
-        move = love.audio.newSource("assets/Sounds/move.wav", "static"),
-        score = love.audio.newSource("assets/Sounds/score.wav", "static")
-    }
+    AudioManager.add("select", "assets/Sounds/select.ogg", "static")
+    AudioManager.add("move", "assets/Sounds/move.wav", "static")
+    AudioManager.add("score", "assets/Sounds/score.wav", "static")
+
+    AudioManager.add("play", "assets/Sounds/bgm.mp3", "stream", 0.4)
 
     gStateMachine =
         StateMachine {
