@@ -77,8 +77,14 @@ end
 
 function AudioManager.unmuteMusic()
     AudioManager._musicMuted = false
+    for key, audio in pairs(AudioManager._musics) do
+        audio:setVolume(0.4)
+    end
 end
 
 function AudioManager.unmuteSound()
     AudioManager._soundMuted = false
+    for key, audio in pairs(AudioManager._sounds) do
+        audio:setVolume(1)
+    end
 end
