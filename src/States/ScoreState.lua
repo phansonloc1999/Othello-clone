@@ -133,6 +133,7 @@ function ScoreState:update(dt)
     if (love.mouse.wasPressed(1)) then
         if (self._buttons.restart:collidesWithMouse()) then
             AudioManager.play("select")
+            AudioManager.play("play")
             gStateMachine:change("play", {size = self._boardSize, numOfPlayer = self._numOfPlayer})
         end
         if (self._buttons.menu:collidesWithMouse()) then
